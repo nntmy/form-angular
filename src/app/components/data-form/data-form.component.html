@@ -16,8 +16,8 @@
 
         <div class="form-group">
           <label for="">Password</label>
-          <input id="passWord" type="password" name="txtPassWord" class="form-control" formControlName="passWord" required > 
-          
+          <input id="passWord" type="password" name="txtPassWord" class="form-control" formControlName="passWord" required >
+
         </div>
 
         <div class="form-group">
@@ -41,8 +41,27 @@
 
 
         </div>
+        <div formArrayName="myChoices">
+          <h3>Aliases</h3>
+          <div *ngFor="let choice of checks; let i=index" class="col-md-2">
+            <label>
+              <input type="checkbox" [value]="choice.value" (change)="onCheckChange($event)">
+              {{choice.description}}
+            </label>
+          </div>
+          <!-- <button (click)="addAlias()">Add Alias</button>
+          <div *ngFor="let address of aliases.controls; let i=index">
+            The repeated alias template -->
+            <!-- <label>
+              Alias:
+              <input type="checkbox" [formControlName]="i" value='i' (change)="onCheckChange($event)">
 
-        <button type="submit" class="btn btn-primary" [disabled]="frmUser.invalid">Save</button>
+
+            </label>
+          </div> -->
+        </div>
+
+        <button type="submit" class="btn btn-primary" >Save</button>
         <button type="button" class="btn btn-primary" (click)="onReset()">Reset</button>
 
         <p>{{frmUser.status}}</p>

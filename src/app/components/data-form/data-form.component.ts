@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators , FormArray, FormControl} from "@angular/forms";
 FormBuilder;
 FormGroup;
 Validators;
@@ -14,7 +14,11 @@ import { from } from "rxjs";
 export class DataFormComponent implements OnInit {
   //formUser la mot formGroup
   public frmUser: FormGroup;
-
+  public checks: Array<any> = [
+    {description: 'descr1', value: 'value1'},
+    {description: "descr2", value: 'value2'},
+    {description: "descr3", value: 'value3'}
+  ];
   constructor(
     private _formBuilder: FormBuilder
     ) {}
@@ -32,23 +36,56 @@ export class DataFormComponent implements OnInit {
       ],
       passWord: [
         '',
-        [Validators.required, Validators.minLength(5), Validators.maxLength(10)]
+        [Validators.required]
       ],
       fullName: [
         '',
-        [Validators.required, Validators.minLength(5), Validators.maxLength(10)]
+        [Validators.required ]
       ],
       email: [
         '',
-        [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')]
+        [Validators.required]
       ],
       phone: [
         '',
-        [Validators.required, Validators.pattern('[0-9]+'), Validators.maxLength(10)]
-      ]
+        [Validators.required]
+      ],
+      // aliases: this._formBuilder.array([
+      //   this._formBuilder.control('')
+      // ])
+      myChoices: new FormArray([]),
     });
   }
+  onCheckChange(event) {
+    const formArray: FormArray = this.frmUser.get('myChoices') as FormArray;
 
+    /* Selected */
+    if(event.target.checked){
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(event.target.value));
+    }
+    /* unselected */
+    else{
+      // find the unselected element
+      let i: number = 0;
+
+      formArray.controls.forEach((ctrl: FormControl) => {
+        if(ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          return;
+        }
+
+        i++;
+      });
+    }
+  }
+  // get aliases() {
+  //   return this.frmUser.get('aliases') as FormArray;
+  // }
+  // addAlias() {
+  //   this.aliases.push(this._formBuilder.control(''));
+  // }
   onSubmit(){
     console.log(this.frmUser);
   }
